@@ -15,9 +15,13 @@ nx.onload = function() {
         console.log(data);
     });
 
-    button1.on('*',function(data) {
+    stage1.on('onstage', function(data) {
+        console.log("onstage is " + data);
+    });
+
+    button1.on('press', function(data) {
         console.log(data);
-        if (data.press == 1) {
+        if (data == 1) {
             stage1.addItem();
 
         }
