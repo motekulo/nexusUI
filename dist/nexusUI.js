@@ -1493,6 +1493,7 @@ exports.lp3 = function(value,pvalue,limit) {
   return newvalue;
 }
 
+
 },{}],7:[function(require,module,exports){
 
 
@@ -6625,12 +6626,12 @@ var stage = module.exports = function (target) {
       | *y* | y position of slider (float 0-1)
       */
     this.val = [
-        { x: .25, y: .5 },
-        { x: .75, y: .5 }
+    { x: .25, y: .5 },
+    { x: .75, y: .5 }
     ]
 
 
-    this.init();
+        this.init();
 }
 
 // inherit the widget object template
@@ -6702,11 +6703,16 @@ stage.prototype.draw = function() {
 // this.clicked is automatically set to true
 // this.clickPos is already and object with x and y properties detailing click point.
 stage.prototype.click = function() {
-    //this.val.x = this.clickPos.x;
-    //this.val.y = this.clickPos.y;
+    //
     //this.scaleNode();
-    this.val["state"] = "click"
-        this.transmit(this.val);
+    //
+    // Find closest val item to click
+    var closestIndex = this.closestItem(this.clickPos);
+    this.val[closestIndex].x = this.clickPos.x/this.GUI.w;
+    this.val[closestIndex].y = math.invert(this.clickPos.y/this.GUI.h);
+
+    this.val[closestIndex]["state"] = "click";
+    this.transmit(this.val);
     this.draw();
 }
 
@@ -6759,6 +6765,27 @@ stage.prototype.release = function() {
 /* 
    extra functions pertaining only to this widget 
    */
+
+stage.prototype.closestItem = function(clickedPos) {
+    var lowIndex = 0;
+    var lowestDist = 1;
+    var xDist = 0;
+    var yDist = 0;
+    //    var xClick = 0.7;
+    //    var yClick = 0.7;
+    for (i = 0; i < this.val.length; i++) {
+        xDist = Math.abs(clickedPos.x/this.GUI.w - this.val[i].x);
+        yDist = Math.abs(math.invert(clickedPos.y/this.GUI.h) - this.val[i].y);
+        var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+        console.log("i " + i + " dist " + dist);
+        if (dist < lowestDist) {
+            lowestDist = dist;
+            lowIndex = i;
+        }
+    }
+    console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
+    return lowIndex;
+}
 
 stage.prototype.scaleNode = function() {
     //var actualX = this.val.x - this.nodeSize;
