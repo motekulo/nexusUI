@@ -5961,6 +5961,8 @@ position.prototype.draw = function() {
 // this.clicked is automatically set to true
 // this.clickPos is already and object with x and y properties detailing click point.
 position.prototype.click = function() {
+        console.log("click X: " + this.clickPos.x);
+        console.log("click Y: " + this.clickPos.y);
 	this.val.x = this.clickPos.x;
 	this.val.y = this.clickPos.y;
 	this.scaleNode();
@@ -6067,6 +6069,7 @@ position.prototype.aniBounce = function() {
 position.prototype.customDestroy = function() {
 	nx.removeAni(this.aniBounce);
 }
+
 },{"../core/widget":3,"../utils/math":6,"util":53}],33:[function(require,module,exports){
 var util = require('util');
 var widget = require('../core/widget');
@@ -6630,7 +6633,7 @@ var stage = module.exports = function (target) {
     { x: .75, y: .5 }
     ]
 
-
+        this.closestIndex = 0;
         this.init();
 }
 
@@ -6704,12 +6707,14 @@ stage.prototype.draw = function() {
 // this.clickPos is already and object with x and y properties detailing click point.
 stage.prototype.click = function() {
     //
-    //this.scaleNode();
     //
     // Find closest val item to click
-    var closestIndex = this.closestItem(this.clickPos);
-    this.val[closestIndex].x = this.clickPos.x/this.GUI.w;
-    this.val[closestIndex].y = math.invert(this.clickPos.y/this.GUI.h);
+    closestIndex = this.findClosestItem(this.clickPos);
+    //this.val[closestIndex].x = this.clickPos.x/this.GUI.w;
+    this.val[closestIndex].x = this.clickPos.x;
+    this.val[closestIndex].y = this.clickPos.y;
+
+    this.scaleNode();
 
     this.val[closestIndex]["state"] = "click";
     this.transmit(this.val);
@@ -6722,6 +6727,8 @@ stage.prototype.move = function() {
     //this.val.x = this.clickPos.x;
     //this.val.y = this.clickPos.y;
     //this.scaleNode();
+
+
     this.val["state"] = "move"
         this.transmit(this.val);
     this.draw();
@@ -6766,7 +6773,7 @@ stage.prototype.release = function() {
    extra functions pertaining only to this widget 
    */
 
-stage.prototype.closestItem = function(clickedPos) {
+stage.prototype.findClosestItem = function(clickedPos) {
     var lowIndex = 0;
     var lowestDist = 1;
     var xDist = 0;
@@ -6788,13 +6795,13 @@ stage.prototype.closestItem = function(clickedPos) {
 }
 
 stage.prototype.scaleNode = function() {
-    //var actualX = this.val.x - this.nodeSize;
-    //var actualY = this.val.y - this.nodeSize;
-    //var clippedX = math.clip(actualX/this.actualWid, 0, 1);
-    //var clippedY = math.clip(actualY/this.actualHgt, 0, 1);
-    //this.val.x = math.prune(clippedX, 3)
-    //    this.val.y = math.prune(clippedY, 3)
-    //    this.val.y = math.invert(this.val.y);
+    var actualX = this.val[closestIndex].x - this.nodeSize;
+    var actualY = this.val[closestIndex].y - this.nodeSize;
+    var clippedX = math.clip(actualX/this.actualWid, 0, 1);
+    var clippedY = math.clip(actualY/this.actualHgt, 0, 1);
+    this.val[closestIndex].x = math.prune(clippedX, 3);
+    this.val[closestIndex].y = math.prune(clippedY, 3);
+    this.val[closestIndex].y = math.invert(this.val[closestIndex].y);
 }
 
 /** @method animate
