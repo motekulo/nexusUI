@@ -6771,30 +6771,30 @@ stage.prototype.release = function() {
    extra functions pertaining only to this widget 
    */
 
+stage.prototype.addItem = function() {
+    var newItem = {x:.1, y:.1};
+    this.val.push(newItem);
+    this.draw();
+
+}
+
 stage.prototype.findClosestItem = function(clickedPos) {
     
-    // FIXME Doesn't adjust for the scale of the view - so it's just using
-    // normalized x,y pairs rather than adjusted positions based on what the
-    // user sees on the canvas.
-    //
-
     var lowIndex = 0;
     var lowestDist = Math.max(this.GUI.h, this.GUI.w);
     var xDist = 0;
     var yDist = 0;
     for (i = 0; i < this.val.length; i++) {
-        //xDist = Math.abs(clickedPos.x/this.GUI.w - this.val[i].x);
         xDist = Math.abs(clickedPos.x - this.val[i].x * this.GUI.w);
-        //yDist = Math.abs(math.invert(clickedPos.y/this.GUI.h) - this.val[i].y);
         yDist = Math.abs(math.invert(clickedPos.y) - this.val[i].y * this.GUI.h);
         var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-        console.log("i " + i + " dist " + dist);
+        //console.log("i " + i + " dist " + dist);
         if (dist < lowestDist) {
             lowestDist = dist;
             lowIndex = i;
         }
     }
-    console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
+    //console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
     return lowIndex;
 }
 

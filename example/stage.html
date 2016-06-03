@@ -12,12 +12,19 @@ nx.onload = function() {
     nx.colorize("fill", "#eee");
 
     stage1.on('*',function(data) {
-        console.log(data)
+        console.log(data);
     });
 
-    position1.on('*',function(data) {
-        console.log(data)
+    button1.on('*',function(data) {
+        console.log(data);
+        if (data.press == 1) {
+            stage1.addItem();
+
+        }
+
+
     })
+
 
 
 }
@@ -37,7 +44,7 @@ nx.onload = function() {
         </style>
 
 
-        <canvas nx="position" style="width:300px;height:100px"></canvas>
+        <canvas nx="button"></canvas>
         <canvas nx="stage" style="width:300px;height:100px"></canvas>
 
         <!--<canvas nx="position" id="position1"></canvas> -->
