@@ -6724,23 +6724,21 @@ stage.prototype.click = function() {
 // .move() will be fired when the interface is moved over after being clicked
 // this.clickPos is already and object with x and y properties detailing click point.
 stage.prototype.move = function() {
-    //this.val.x = this.clickPos.x;
-    //this.val.y = this.clickPos.y;
-    //this.scaleNode();
-
-
-    this.val["state"] = "move"
-        this.transmit(this.val);
+    this.val[closestIndex].x = this.clickPos.x;
+    this.val[closestIndex].y = this.clickPos.y;
+    this.scaleNode();
+    this.val[closestIndex]["state"] = "move";
+    this.transmit(this.val);
     this.draw();
 }
 
 // .release() will be fired on mouse up (unclick)
 stage.prototype.release = function() {
-    //this.val.x = this.clickPos.x;
-    //this.val.y = this.clickPos.y;
-    //this.scaleNode();
-    this.val["state"] = "release"
-        this.transmit(this.val);
+    this.val[closestIndex].x = this.clickPos.x;
+    this.val[closestIndex].y = this.clickPos.y;
+    this.scaleNode();
+    this.val[closestIndex]["state"] = "release";
+    this.transmit(this.val);
     this.draw();
 }
 
@@ -6774,15 +6772,21 @@ stage.prototype.release = function() {
    */
 
 stage.prototype.findClosestItem = function(clickedPos) {
+    
+    // FIXME Doesn't adjust for the scale of the view - so it's just using
+    // normalized x,y pairs rather than adjusted positions based on what the
+    // user sees on the canvas.
+    //
+
     var lowIndex = 0;
-    var lowestDist = 1;
+    var lowestDist = Math.max(this.GUI.h, this.GUI.w);
     var xDist = 0;
     var yDist = 0;
-    //    var xClick = 0.7;
-    //    var yClick = 0.7;
     for (i = 0; i < this.val.length; i++) {
-        xDist = Math.abs(clickedPos.x/this.GUI.w - this.val[i].x);
-        yDist = Math.abs(math.invert(clickedPos.y/this.GUI.h) - this.val[i].y);
+        //xDist = Math.abs(clickedPos.x/this.GUI.w - this.val[i].x);
+        xDist = Math.abs(clickedPos.x - this.val[i].x * this.GUI.w);
+        //yDist = Math.abs(math.invert(clickedPos.y/this.GUI.h) - this.val[i].y);
+        yDist = Math.abs(math.invert(clickedPos.y) - this.val[i].y * this.GUI.h);
         var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
         console.log("i " + i + " dist " + dist);
         if (dist < lowestDist) {
