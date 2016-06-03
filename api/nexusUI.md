@@ -631,6 +631,16 @@ class position
 --------------
 **Methods**
 
+position.stageCheck(a)
+----------------------
+Checks if a point is onStage or not
+
+
+
+**Parameters**
+
+**a**:  *point*,  point with x and y parameters
+
 position.animate(\[type\])
 --------------------------
 Adds animation to the widget.

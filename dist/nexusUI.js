@@ -6641,7 +6641,7 @@ util.inherits(stage, widget);
 
 // .init() is called automatically when the widget is created on a webpage.
 stage.prototype.init = function() {
-    this.nodeSize = Math.min(this.GUI.h,this.GUI.w)/10;
+    this.nodeSize = Math.min(this.GUI.h,this.GUI.w)/15;
     this.nodeSize = Math.max(this.nodeSize,10)
         this.actualWid = this.GUI.w - this.nodeSize*2;
     this.actualHgt = this.GUI.h - this.nodeSize*2;
@@ -6712,15 +6712,11 @@ stage.prototype.draw = function() {
 // this.clicked is automatically set to true
 // this.clickPos is already and object with x and y properties detailing click point.
 stage.prototype.click = function() {
-    //
-    //
     // Find closest val item to click
     this.closestIndex = this.findClosestItem(this.clickPos);
-    //this.val[closestIndex].x = this.clickPos.x/this.GUI.w;
     this.val[this.closestIndex].x = this.clickPos.x;
     this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
-
     this.val[this.closestIndex]["state"] = "click";
     this.transmit(this.val);
     this.draw();
@@ -6739,6 +6735,10 @@ stage.prototype.move = function() {
 
 // .release() will be fired on mouse up (unclick)
 stage.prototype.release = function() {
+
+    // establish whether on stage or not
+    this.val[this.closestIndex]["onstage"] = this.stageCheck(this.val[this.closestIndex]);
+
     this.val[this.closestIndex].x = this.clickPos.x;
     this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
@@ -6802,24 +6802,28 @@ stage.prototype.findClosestItem = function(clickedPos) {
     }
 return this.closestIndex;
 
-/*
-   var lowIndex = 0;
-   var lowestDist = Math.max(this.GUI.h, this.GUI.w);
-   var xDist = 0;
-   var yDist = 0;
-   for (i = 0; i < this.val.length; i++) {
-   xDist = Math.abs(clickedPos.x - this.val[i].x * this.GUI.w);
-   yDist = Math.abs(math.invert(clickedPos.y) - this.val[i].y * this.GUI.h);
-   var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-//console.log("i " + i + " dist " + dist);
-if (dist < lowestDist) {
-lowestDist = dist;
-lowIndex = i;
 }
-}
-*/
-//console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
-//return lowIndex;
+
+/** @method stageCheck
+ * Checks if a point is onStage or not
+ * @param {point} a point with x and y parameters
+ *
+ */
+stage.prototype.stageCheck = function(point) {
+
+    var xMargin = (this.GUI.h - (this.GUI.h * this.stageSize))/2;
+    var yMargin = (this.GUI.w - (this.GUI.w * this.stageSize))/2;
+    var xInPixels = point.x * this.GUI.w;
+    var yInPixels = point.y * this.GUI.h;
+    if (xInPixels < xMargin || xInPixels > this.GUI.w - xMargin) {
+        return false;
+    }
+
+    if (yInPixels < yMargin || yInPixels > this.GUI.h - yMargin) {
+        return false;
+    }
+    return true;
+
 }
 
 stage.prototype.scaleNode = function() {
