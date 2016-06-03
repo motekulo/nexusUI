@@ -6633,7 +6633,6 @@ var stage = module.exports = function (target) {
     { x: .75, y: .5 }
     ]
 
-        this.closestIndex = 0;
         this.init();
 }
 
@@ -6646,6 +6645,7 @@ stage.prototype.init = function() {
     this.nodeSize = Math.max(this.nodeSize,10)
         this.actualWid = this.GUI.w - this.nodeSize*2;
     this.actualHgt = this.GUI.h - this.nodeSize*2;
+    this.closestIndex = 0;
     this.draw();
 }
 
@@ -6709,14 +6709,13 @@ stage.prototype.click = function() {
     //
     //
     // Find closest val item to click
-    closestIndex = this.findClosestItem(this.clickPos);
+    this.closestIndex = this.findClosestItem(this.clickPos);
     //this.val[closestIndex].x = this.clickPos.x/this.GUI.w;
-    this.val[closestIndex].x = this.clickPos.x;
-    this.val[closestIndex].y = this.clickPos.y;
-
+    this.val[this.closestIndex].x = this.clickPos.x;
+    this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
 
-    this.val[closestIndex]["state"] = "click";
+    this.val[this.closestIndex]["state"] = "click";
     this.transmit(this.val);
     this.draw();
 }
@@ -6724,20 +6723,20 @@ stage.prototype.click = function() {
 // .move() will be fired when the interface is moved over after being clicked
 // this.clickPos is already and object with x and y properties detailing click point.
 stage.prototype.move = function() {
-    this.val[closestIndex].x = this.clickPos.x;
-    this.val[closestIndex].y = this.clickPos.y;
+    this.val[this.closestIndex].x = this.clickPos.x;
+    this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
-    this.val[closestIndex]["state"] = "move";
+    this.val[this.closestIndex]["state"] = "move";
     this.transmit(this.val);
     this.draw();
 }
 
 // .release() will be fired on mouse up (unclick)
 stage.prototype.release = function() {
-    this.val[closestIndex].x = this.clickPos.x;
-    this.val[closestIndex].y = this.clickPos.y;
+    this.val[this.closestIndex].x = this.clickPos.x;
+    this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
-    this.val[closestIndex]["state"] = "release";
+    this.val[this.closestIndex]["state"] = "release";
     this.transmit(this.val);
     this.draw();
 }
@@ -6779,33 +6778,52 @@ stage.prototype.addItem = function() {
 }
 
 stage.prototype.findClosestItem = function(clickedPos) {
-    
-    var lowIndex = 0;
-    var lowestDist = Math.max(this.GUI.h, this.GUI.w);
-    var xDist = 0;
-    var yDist = 0;
+//    var previousClosest = this.closestIndex;
+
     for (i = 0; i < this.val.length; i++) {
-        xDist = Math.abs(clickedPos.x - this.val[i].x * this.GUI.w);
-        yDist = Math.abs(math.invert(clickedPos.y) - this.val[i].y * this.GUI.h);
-        var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-        //console.log("i " + i + " dist " + dist);
-        if (dist < lowestDist) {
-            lowestDist = dist;
-            lowIndex = i;
+
+        var itemX = this.val[i].x * this.GUI.w;
+        var itemY = this.val[i].y * this.GUI.h;
+        var xDiff = Math.abs(clickedPos.x - itemX);
+
+        var invertedClickedY = math.scale(clickedPos.y, 0, this.GUI.h, this.GUI.h, 0);
+
+        var yDiff = Math.abs(invertedClickedY - itemY);
+
+        if (( xDiff < this.nodeSize) && (yDiff < this.nodeSize)) {
+            return i;  // index of item hit
         }
     }
-    //console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
-    return lowIndex;
+return this.closestIndex;
+
+/*
+   var lowIndex = 0;
+   var lowestDist = Math.max(this.GUI.h, this.GUI.w);
+   var xDist = 0;
+   var yDist = 0;
+   for (i = 0; i < this.val.length; i++) {
+   xDist = Math.abs(clickedPos.x - this.val[i].x * this.GUI.w);
+   yDist = Math.abs(math.invert(clickedPos.y) - this.val[i].y * this.GUI.h);
+   var dist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+//console.log("i " + i + " dist " + dist);
+if (dist < lowestDist) {
+lowestDist = dist;
+lowIndex = i;
+}
+}
+*/
+//console.log("Lowest index is " + lowIndex + " with distance of " + lowestDist);
+//return lowIndex;
 }
 
 stage.prototype.scaleNode = function() {
-    var actualX = this.val[closestIndex].x - this.nodeSize;
-    var actualY = this.val[closestIndex].y - this.nodeSize;
+    var actualX = this.val[this.closestIndex].x - this.nodeSize;
+    var actualY = this.val[this.closestIndex].y - this.nodeSize;
     var clippedX = math.clip(actualX/this.actualWid, 0, 1);
     var clippedY = math.clip(actualY/this.actualHgt, 0, 1);
-    this.val[closestIndex].x = math.prune(clippedX, 3);
-    this.val[closestIndex].y = math.prune(clippedY, 3);
-    this.val[closestIndex].y = math.invert(this.val[closestIndex].y);
+    this.val[this.closestIndex].x = math.prune(clippedX, 3);
+    this.val[this.closestIndex].y = math.prune(clippedY, 3);
+    this.val[this.closestIndex].y = math.invert(this.val[this.closestIndex].y);
 }
 
 /** @method animate
