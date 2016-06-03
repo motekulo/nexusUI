@@ -6689,11 +6689,11 @@ stage.prototype.draw = function() {
 
                 if (this.clicked) {
                     // draw the emphasis circle
-                    beginPath();
-                    fillStyle = this.colors.accent;
-                    arc(drawingX, drawingY, this.nodeSize*2, 0, Math.PI*2, true);					
-                    fill();
-                    closePath();clearRect(0,this.GUI.h,this.GUI.w,this.height - this.GUI.h)
+                    //beginPath();
+                    //fillStyle = this.colors.accent;
+                    //arc(drawingX, drawingY, this.nodeSize*2, 0, Math.PI*2, true);					
+                    //fill();
+                    //closePath();clearRect(0,this.GUI.h,this.GUI.w,this.height - this.GUI.h)
                 }
             }
         }
