@@ -6646,6 +6646,7 @@ stage.prototype.init = function() {
         this.actualWid = this.GUI.w - this.nodeSize*2;
     this.actualHgt = this.GUI.h - this.nodeSize*2;
     this.closestIndex = 0;
+    this.stageSize = 0.8;
     this.draw();
 }
 
@@ -6659,6 +6660,11 @@ stage.prototype.draw = function() {
         // use this.colors.accent for important or highlighted parts (default: a bright color)
         fillStyle = this.colors.fill;
         fillRect(0,0,this.GUI.w,this.GUI.h);
+
+        strokeStyle = this.colors.accent;
+        var stageX = (this.GUI.w - this.GUI.w * this.stageSize)/2;
+        var stageY = (this.GUI.h - this.GUI.h * this.stageSize)/2;
+        strokeRect(stageX, stageY, this.GUI.w * this.stageSize, this.GUI.h * this.stageSize);
 
         for (i = 0; i < this.val.length; i++) {
 
