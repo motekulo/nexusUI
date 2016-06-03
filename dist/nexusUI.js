@@ -6738,12 +6738,13 @@ stage.prototype.release = function() {
 
     // establish whether on stage or not
     this.val[this.closestIndex]["onstage"] = this.stageCheck(this.val[this.closestIndex]);
+    this.val[this.closestIndex]["item"] = this.closestIndex;
 
     this.val[this.closestIndex].x = this.clickPos.x;
     this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
     this.val[this.closestIndex]["state"] = "release";
-    this.transmit(this.val);
+    this.transmit(this.val[this.closestIndex]);
     this.draw();
 }
 
