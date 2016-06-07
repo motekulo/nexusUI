@@ -6719,7 +6719,7 @@ stage.prototype.click = function() {
     this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
     this.val[this.closestIndex]["state"] = "click";
-    this.transmit(this.val);
+    this.transmit(this.val[this.closestIndex]);
     this.draw();
 }
 
@@ -6730,7 +6730,7 @@ stage.prototype.move = function() {
     this.val[this.closestIndex].y = this.clickPos.y;
     this.scaleNode();
     this.val[this.closestIndex]["state"] = "move";
-    this.transmit(this.val);
+    this.transmit(this.val[this.closestIndex]);
     this.draw();
 }
 
