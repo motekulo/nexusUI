@@ -6788,7 +6788,7 @@ stage.prototype.addItem = function() {
 stage.prototype.findClosestItem = function(clickedPos) {
     //    var previousClosest = this.closestIndex;
 
-    for (i = 0; i < this.val.length; i++) {
+    for (var i = 0; i < this.val.length; i++) {
 
         var itemX = this.val[i].x * this.GUI.w;
         var itemY = this.val[i].y * this.GUI.h;
