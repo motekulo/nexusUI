@@ -627,12 +627,12 @@ class select
 ------------
 class slider
 ------------
-class position
---------------
+class stage
+-----------
 **Methods**
 
-position.stageCheck(a)
-----------------------
+stage.stageCheck(a)
+-------------------
 Checks if a point is onStage or not
 
 
@@ -641,8 +641,8 @@ Checks if a point is onStage or not
 
 **a**:  *point*,  point with x and y parameters
 
-position.animate(\[type\])
---------------------------
+stage.animate(\[type\])
+-----------------------
 Adds animation to the widget.
 
 
