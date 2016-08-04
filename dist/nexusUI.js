@@ -6648,6 +6648,7 @@ stage.prototype.init = function() {
     this.actualHgt = this.GUI.h - this.nodeSize*2;
     this.closestIndex = 0;
     this.stageSize = 0.8;
+    this.currentValColor = this.colors.accent;
     this.draw();
 }
 
@@ -6780,10 +6781,17 @@ stage.prototype.release = function() {
    */
 
 stage.prototype.addItem = function() {
-    var newItem = {x:.1, y:.1};
+    var newItem = {x:.1, y:.1, color: this.currentValColor};
     this.val.push(newItem);
     this.draw();
 
+}
+
+stage.prototype.changeColor = function(itemIndex, color){
+    if (itemIndex >= 0 && itemIndex < this.val.length) {
+        this.val[itemIndex].color = color;
+        this.currentValColor = color;
+    }
 }
 
 stage.prototype.findClosestItem = function(clickedPos) {
